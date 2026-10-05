@@ -1,4 +1,4 @@
-import sqlite3, re, hashlib
+import sqlite3, hashlib, re
 from prompt_toolkit import prompt
 
 

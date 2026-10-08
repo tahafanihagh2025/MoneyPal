@@ -10,7 +10,7 @@ print("====================================================")
 create_db.create_table()
 print("Database initialized successfully!")
 
-inp_choice = ""
+inp_choice = "sth"
 while inp_choice != "0":
     print("====================================================")
     print(

@@ -1,5 +1,4 @@
-import sqlite3, requests, os
-import view_clients
+import sqlite3, requests
 
 
 def ai_advice(client_data):

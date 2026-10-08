@@ -44,15 +44,15 @@ def remove_client():
             print("No such client found!")
             break
         else:
-        # Remove the client
+            # Remove the client
             my_cur.execute(
-                    """DELETE 
+                """DELETE 
                                 FROM Clients
                                 WHERE clientID = ?;
                 """,
-                    (id_choice,),
-                )
-                
+                (id_choice,),
+            )
+
             print(f"Client {id_choice} deleted successfully!")
             break
 

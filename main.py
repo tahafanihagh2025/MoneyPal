@@ -14,7 +14,7 @@ inp_choice = "sth"
 while inp_choice != "0":
     print("====================================================")
     print(
-        "1. Add Client\n2. Remove Client\n3. View Profile\n4. Edit Profile\n5. Passwords Protection\n6. AI Financial Advisor\n0. Exit"
+        "1. Add Client\n2. Remove Client\n3. View Profile\n4. Edit Profile\n5. Passwords Protection\n6. AI Financial Advisor\n7. View All\n0. Exit"
     )
     print("====================================================")
 
@@ -44,14 +44,24 @@ while inp_choice != "0":
 
     elif inp_choice == "6":
         time.sleep(0.5)
-        # print("Analyze this user's monthly financial situation. Identify potential problems and provide three practical suggestions.")
         client_data = view_clients.view_profile()
-        ai_advisor.ai_advice(client_data)
+        print('')
+        ai_choice = input("Enter your AI_Lock: ")
+
+        if ai_choice == "0000":
+            ai_advisor.ai_advice(client_data)
+        else:
+            print("Access denied, Try again!")
+
+    elif inp_choice == "7":
+        time.sleep(0.5)
+        view_clients.view_all()
 
     elif inp_choice == "0":
         inp_choice = "0"
         print("Goodbye!")
         time.sleep(0.5)
+
     else:
         print("Not included, Try again!")
         time.sleep(1)

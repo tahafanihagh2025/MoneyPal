@@ -59,7 +59,9 @@ def add_client():
 
     account_type = input("What's your account type? ")
 
-    notes = input("Feel free to add any important pieces of notes in here (passwords especially): ")
+    notes = input(
+        "Feel free to add any important pieces of notes in here (passwords especially): "
+    )
 
     client_info = (
         first_name,

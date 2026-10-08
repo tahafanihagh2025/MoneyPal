@@ -60,7 +60,10 @@ def protect_pass():
                 else:
                     print(result)
                     for i in range(len(result)):
-                        print(f"Hashed base for {result[i]}:", hashlib.md5(result[i].encode("utf-8")).hexdigest())
+                        print(
+                            f"Hashed base for {result[i]}:",
+                            hashlib.md5(result[i].encode("utf-8")).hexdigest(),
+                        )
             break
 
     my_conn.commit()

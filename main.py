@@ -1,6 +1,6 @@
 import time, os
 import create_db, add_clients, remove_clients, view_clients, edit_clients, pass_clients, ai_advisor
-print("Hi there!")
+
 
 print("====================================================")
 print("Welcome Back to your state-off-the-art MoneyPal assistant!")

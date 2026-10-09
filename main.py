@@ -45,10 +45,10 @@ while inp_choice != "0":
     elif inp_choice == "6":
         time.sleep(0.5)
         client_data = view_clients.view_profile()
-        print('')
-        ai_choice = input("Enter your AI_Lock: ")
+        print("")
+        ai_choice = input("Enter your AI_Pass: ")
 
-        if ai_choice == "0000":
+        if ai_choice == os.getenv("MP_MASTER_ID"):
             ai_advisor.ai_advice(client_data)
         else:
             print("Access denied, Try again!")

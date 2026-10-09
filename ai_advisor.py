@@ -1,12 +1,12 @@
-import sqlite3, requests
+import sqlite3, requests, os
 
 
 def ai_advice(client_data):
-    my_conn = sqlite3.connect("moneypal_db.db")
-    my_cur = my_conn.cursor()
     """
     The ai_advice function puts forward a couple of considerably reasonable recommendations based off of the client's latest financial status and portfolio.
     """
+    my_conn = sqlite3.connect("moneypal_db.db")
+    my_cur = my_conn.cursor()
 
     # Check if we have any clients or not
     my_cur.execute("""SELECT * FROM Clients;""")
@@ -18,9 +18,7 @@ def ai_advice(client_data):
     my_conn.commit()
     my_conn.close()
 
-    # aa-WrpxiatGNuVUcKnJdQtLdvIvkH05pN5Hz8EvtVakjQvAaw7S
-    AVALAI_API_KEY = "aa-WrpxiatGNuVUcKnJdQtLdvIvkH05pN5Hz8EvtVakjQvAaw7S"
-    api_key = AVALAI_API_KEY
+    api_key = os.getenv("MP_API_KEY")
 
     url = "https://api.avalai.ir/v1/chat/completions"
 
@@ -46,30 +44,19 @@ def ai_advice(client_data):
     Do not make unsupported assumptions about information that isn't provided. The amounts provided are all in dollars!
     """
 
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
+    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
 
     data = {
         "model": "deepseek-flash",
-        "messages": [
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ]
+        "messages": [{"role": "user", "content": prompt}],
     }
 
-    response = requests.post(
-        url,
-        headers=headers,
-        json=data
-    )
+    response = requests.post(url, headers=headers, json=data)
 
     result = response.json()
     answer = result["choices"][0]["message"]["content"]
 
-    print('')
-    print("Let's see what our adroitly trained AI Model is going to walk you through:\n")
+    print("")
+    print("Let's see what our adroitly trained AI Model is going to walk you through --->>>")
+    print("")
     print(answer)

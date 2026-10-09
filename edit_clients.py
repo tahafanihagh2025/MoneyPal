@@ -19,7 +19,7 @@ def edit_profile():
     # inp_id validation
     while True:
         try:
-            id_choice = int(input("Enter the clientID which you wish to edit: "))
+            id_choice = int(input("Enter the clientID which you wish to Edit: "))
         except ValueError as e:
             print(f"Not included, Try again! | {e}")
         else:

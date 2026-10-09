@@ -1,4 +1,4 @@
-import sqlite3, math
+import sqlite3, math, time, os
 from prompt_toolkit import prompt
 
 
@@ -19,7 +19,7 @@ def view_profile():
     # inp_id validation
     while True:
         try:
-            id_choice = int(input("Enter the clientID which you wish to view: "))
+            id_choice = int(input("Enter the clientID which you wish to View: "))
         except ValueError as e:
             print(f"Not included, Try again! | {e}")
         else:
@@ -133,7 +133,7 @@ def view_all():
 
     # MasterID validation
     master_id = prompt("Enter your MasterID: ", is_password=True)
-    if master_id == "0000":
+    if master_id == os.getenv("MP_MASTER_ID"):
         my_cur.execute("""SELECT *
                         FROM Clients;
         """)
@@ -174,6 +174,7 @@ def view_all():
             print(
                 "=============================================================================="
             )
+            time.sleep(1)
 
         # Clients Overall Data
         my_cur.execute(
@@ -184,12 +185,13 @@ def view_all():
         status = my_cur.fetchall()
         print("Clients Overall Data\n")
         print(
-            f"Average Age: {math.ceil(status[0][0])}\n"
-            f"Average Incomes: {round(status[0][1], 2)}\n"
-            f"Average Expenses: {round(status[0][2], 2)}\n"
-            f"Average Assets: {round(status[0][3], 2)}\n"
-            f"Average Debts: {round(status[0][4], 2)}\n"
-            f"Average Balance: {round(status[0][5], 2)}"
+            f"AVERAGE...\n"
+            f"Age: {math.ceil(status[0][0])}\n"
+            f"Incomes: {round(status[0][1], 2)}\n"
+            f"Expenses: {round(status[0][2], 2)}\n"
+            f"Assets: {round(status[0][3], 2)}\n"
+            f"Debts: {round(status[0][4], 2)}\n"
+            f"Balance: {round(status[0][5], 2)}"
         )
     else:
         print("Access denied, Try again!")

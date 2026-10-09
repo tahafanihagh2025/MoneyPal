@@ -19,7 +19,7 @@ def remove_client():
     # inp_id validation
     while True:
         try:
-            id_choice = int(input("Enter the clientID which you wish to remove: "))
+            id_choice = int(input("Enter the clientID which you wish to Remove: "))
         except ValueError as e:
             print(f"Not included, Try again! | {e}")
         else:

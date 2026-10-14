@@ -1,4 +1,4 @@
-import sqlite3
+import time, sqlite3, progress_bar, hashlib
 from prompt_toolkit import prompt
 
 
@@ -10,7 +10,7 @@ def remove_client():
     my_cur = my_conn.cursor()
 
     # Check if we have any clients or not
-    my_cur.execute("""SELECT * FROM Clients;""")
+    my_cur.execute("""SELECT clientID FROM Clients;""")
     check = my_cur.fetchall()
     if not check:
         print("No clients available!")
@@ -28,6 +28,7 @@ def remove_client():
     # inp_password and id check
     while True:
         pass_validation = prompt("Enter the password: ", is_password=True)
+        hashed_password = hashlib.sha256(pass_validation.encode("utf-8")).hexdigest()
         my_cur.execute(
             """SELECT clientID, password
                             FROM Clients
@@ -35,12 +36,12 @@ def remove_client():
             """,
             (
                 id_choice,
-                pass_validation,
+                hashed_password,
             ),
         )
         client_pass = my_cur.fetchall()
 
-        if len(client_pass) == 0:
+        if not client_pass:
             print("No such client found!")
             break
         else:
@@ -53,7 +54,10 @@ def remove_client():
                 (id_choice,),
             )
 
-            print(f"Client {id_choice} deleted successfully!")
+            time.sleep(0.5)
+            progress_bar.track_progress()
+            print(f"Client {id_choice} removed successfully!")
+            time.sleep(0.5)
             break
 
     my_conn.commit()

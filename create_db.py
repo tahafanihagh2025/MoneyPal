@@ -17,11 +17,11 @@ def create_table():
         password VARCHAR(100) NOT NULL,
         incomes FLOAT NOT NULL DEFAULT 0,
         expenses FLOAT NOT NULL DEFAULT 0,
-        assetsAmount FLOAT DEFAULT 0,
-        debtsAmount FLOAT DEFAULT 0,
+        assetsAmount FLOAT,
+        debtsAmount FLOAT,
         balance FLOAT,
-        accountType VARCHAR(50) NULL,
-        notes TEXT NULL
+        accountType VARCHAR(50),
+        notes TEXT
     );""")
 
     # Begin the counting of clientIDs from 101

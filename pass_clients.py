@@ -10,7 +10,7 @@ def protect_pass():
     my_cur = my_conn.cursor()
 
     # Check if we have any clients or not
-    my_cur.execute("""SELECT * FROM Clients;""")
+    my_cur.execute("""SELECT clientID FROM Clients;""")
     check = my_cur.fetchall()
     if not check:
         print("No clients available!")
@@ -28,6 +28,7 @@ def protect_pass():
     # inp_id and password validation
     while True:
         pass_validation = prompt("Enter the password: ", is_password=True)
+        hashed_password = hashlib.sha256(pass_validation.encode("utf-8")).hexdigest()
         my_cur.execute(
             """SELECT clientID, password
                             FROM Clients
@@ -35,11 +36,11 @@ def protect_pass():
             """,
             (
                 id_choice,
-                pass_validation,
+                hashed_password,
             ),
         )
         client_pass = my_cur.fetchall()
-        if len(client_pass) == 0:
+        if not client_pass:
             print("No such client found!")
             return
         else:
@@ -62,7 +63,7 @@ def protect_pass():
                     for i in range(len(result)):
                         print(
                             f"Hashed base for {result[i]}:",
-                            hashlib.md5(result[i].encode("utf-8")).hexdigest(),
+                            hashlib.sha256(result[i].encode("utf-8")).hexdigest()
                         )
             break
 

@@ -1,4 +1,4 @@
-import sqlite3
+import sqlite3, progress_bar, hashlib, time
 from prompt_toolkit import prompt
 
 
@@ -10,7 +10,7 @@ def edit_profile():
     my_cur = my_conn.cursor()
 
     # Check if we have any clients or not
-    my_cur.execute("""SELECT * FROM Clients;""")
+    my_cur.execute("""SELECT clientID FROM Clients;""")
     check = my_cur.fetchall()
     if not check:
         print("No clients available!")
@@ -28,6 +28,7 @@ def edit_profile():
     # inp_id and password validation
     while True:
         pass_validation = prompt("Enter the password: ", is_password=True)
+        hashed_password = hashlib.sha256(pass_validation.encode("utf-8")).hexdigest()
         my_cur.execute(
             """SELECT clientID, password
                             FROM Clients
@@ -35,24 +36,24 @@ def edit_profile():
             """,
             (
                 id_choice,
-                pass_validation,
+                hashed_password,
             ),
         )
         client_pass = my_cur.fetchall()
-        if len(client_pass) == 0:
+        if not client_pass:
             print("No such client found!")
             return
         else:
             break
 
     ## UPDATE profile
-    first_name = input("What's your first name?* ")
-    last_name = input("What's your last name?* ")
+    first_name = input("1) What's your first name?* ")
+    last_name = input("2) What's your last name?* ")
 
     # inp_age validation
     while True:
         try:
-            age = int(input("How old are you? "))
+            age = int(input("3) How old are you? "))
         except ValueError as e:
             print(f"Not included, Try again! | {e}")
         else:
@@ -61,21 +62,25 @@ def edit_profile():
     # inp_password validation
     while True:
         password = input(
-            "Set a strong password* (Could be a combination of numbers, letters and symbols)\nFORMART -> nondigits_digits: "
+            "4) Set a strong password* (Could be a combination of numbers, letters and symbols)\nFORMART -> nondigits_digits: "
         )
-        password_redo = prompt("Enter the password again: ", is_password=True)
-        if password == password_redo:
-            password = password_redo
+        password_repeat = prompt("Enter the password again: ", is_password=True)
+        if password == password_repeat:
+            password = password_repeat
             break
         else:
             print("No matches, Try again!")
             continue
 
+    original_password = password
+    hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
+    password_set = (original_password, hashed_password)
+
     # inp_incomes, expenses validation
     while True:
         try:
-            incomes = float(input("Enter your total incomes amount ($): "))
-            expenses = float(input("Enter your total expenses amount ($): "))
+            incomes = float(input("5) Enter your total incomes amount ($): "))
+            expenses = float(input("6) Enter your total expenses amount ($): "))
         except ValueError as e:
             print(f"Not included, Try again! | {e}")
         else:
@@ -84,8 +89,8 @@ def edit_profile():
     # inp_assets, debts validation
     while True:
         try:
-            assets = float(input("Enter your total assets amount ($): "))
-            debts = float(input("Enter your total debts amount ($): "))
+            assets = float(input("7) Enter your total assets amount ($): "))
+            debts = float(input("8) Enter your total debts amount ($): "))
         except ValueError as e:
             print(f"Not included, Try again! | {e}")
         else:
@@ -93,15 +98,15 @@ def edit_profile():
 
     balance = round((incomes + assets) - (expenses + debts), 2)
 
-    account_type = input("What's your account type? ")
+    account_type = input("9) What's your account type? ")
 
-    notes = input("Feel free to add any important pieces of notes in here: ")
+    notes = input("10) Feel free to add any important pieces of notes in here: ")
 
     client_info = (
         first_name,
         last_name,
         age,
-        password,
+        password_set[1],
         incomes,
         expenses,
         assets,
@@ -134,7 +139,10 @@ def edit_profile():
         ),
     )
 
+    time.sleep(0.5)
+    progress_bar.track_progress()
     print(f"New changes applied successfully to clientID {id_choice}!")
+    time.sleep(0.5)
 
     my_conn.commit()
     my_conn.close()

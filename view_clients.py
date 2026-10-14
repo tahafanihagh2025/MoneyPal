@@ -1,4 +1,4 @@
-import sqlite3, math, time, os
+import sqlite3, math, time, os, hashlib
 from prompt_toolkit import prompt
 
 
@@ -10,7 +10,7 @@ def view_profile():
     my_cur = my_conn.cursor()
 
     # Check if we have any clients or not
-    my_cur.execute("""SELECT * FROM Clients;""")
+    my_cur.execute("""SELECT clientID FROM Clients;""")
     check = my_cur.fetchall()
     if not check:
         print("No clients available!")
@@ -34,16 +34,18 @@ def view_profile():
     )
     client = my_cur.fetchall()
 
-    if len(client) == 0:
+    if not client:
         print(f"No such client found!")
         return
     else:
+        print("")
         for info in client:
             client_id, first_name, last_name = info
             print(
                 f"clientID: {client_id}\n"
                 f"Full Name: {first_name.capitalize()} {last_name.capitalize()}"
             )
+        print("")
 
     # More info access
     my_cur.execute(
@@ -60,6 +62,7 @@ def view_profile():
 
         if more_choice == "y":
             pass_validation = prompt("Enter the password: ", is_password=True)
+            hashed_password = hashlib.sha256(pass_validation.encode("utf-8")).hexdigest()
             my_cur.execute(
                 """SELECT clientID, password
                                 FROM Clients
@@ -67,15 +70,16 @@ def view_profile():
                 """,
                 (
                     id_choice,
-                    pass_validation,
+                    hashed_password,
                 ),
             )
             client_pass = my_cur.fetchall()
 
-            if len(client_pass) == 0:
+            if not client_pass:
                 print("No such client found!")
                 return
             else:
+                print("")
                 for info in client_more:
                     (
                         client_id,
@@ -95,7 +99,7 @@ def view_profile():
                         f"clientID: {client_id}\n"
                         f"Full Name: {first_name.capitalize()} {last_name.capitalize()}\n"
                         f"Age: {age} years old\n"
-                        f"Password: {password}\n"
+                        f"Password: {pass_validation}\n"
                         f"Incomes: {incomes} $\n"
                         f"Expenses: {expenses} $\n"
                         f"Assets: {assets} $\n"
@@ -125,7 +129,7 @@ def view_all():
     my_cur = my_conn.cursor()
 
     # Check if we have any clients or not
-    my_cur.execute("""SELECT * FROM Clients;""")
+    my_cur.execute("""SELECT clientID FROM Clients;""")
     check = my_cur.fetchall()
     if not check:
         print("No clients available!")
@@ -133,7 +137,7 @@ def view_all():
 
     # MasterID validation
     master_id = prompt("Enter your MasterID: ", is_password=True)
-    if master_id == os.getenv("MP_MASTER_ID"):
+    if master_id == os.getenv("MONEYPAL_MASTER_ID"):
         my_cur.execute("""SELECT *
                         FROM Clients;
         """)
